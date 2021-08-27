@@ -16,9 +16,6 @@
  node1.right = node5;
  node3.left = node6;
  node3.right = node7;
-
-//var node1 = new TreeNode(1);
-
   
 let index = 0;
  var serialize = function(root,serilizeArr) {
@@ -48,8 +45,4 @@ let index = 0;
  };
 
 var ds = deserialize(serialize(node1));
-
-/**
- * Your functions will be called as such:
- * deserialize(serialize(root));
- */
+console.log('Result', ds);
