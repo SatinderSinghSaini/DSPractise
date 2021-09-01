@@ -3,46 +3,24 @@
      this.val = val;
      this.left = this.right = null;
  }
- var node1 = new TreeNode(1);
- var node2 = new TreeNode(2);
- var node3 = new TreeNode(3);
- var node4 = new TreeNode(0.5);
- var node5 = new TreeNode(1.5);
- var node6 = new TreeNode(2.5);
- var node7 = new TreeNode(3.5);
- node2.left = node1;
- node2.right = node3;
- node1.left = node4;
- node1.right = node5;
- node3.left = node6;
- node3.right = node7;
-  
-let index = 0;
- var serialize = function(root,serilizeArr) {
-     if(serilizeArr === undefined || serilizeArr === null)
-        serilizeArr = [], index=0;
-     if(root){
-         serilizeArr.push(root.val);
-         serialize(root.left, serilizeArr);
-         serialize(root.right, serilizeArr);
-     }        
-     else
-         serilizeArr.push(null);
-     return serilizeArr; 
- };
- 
- var deserialize = function(data) {
-     if(index< data.length && data[index] !== null){
-         var node = new TreeNode(data[index]);
-         index++;
-         node.left = deserialize(data);
-         index++;
-         node.right = deserialize(data);
-     }else{
-         node = null;
-     }     
-     return node;
- };
 
-var ds = deserialize(serialize(node1));
-console.log('Result', ds);
+var buildTree = function(preorder, inorder) {
+    let preorder_indx = 0;
+    let arrToTree = function(left,right){
+        if(left> right)
+            return null;
+        let root_val = preorder[preorder_indx];
+        let root = new TreeNode(root_val);
+        preorder_indx++;
+        root.left= arrToTree(left,inorder_indx_val_map[root_val]-1);
+
+        root.right=arrToTree(inorder_indx_val_map[root_val]+1, right);
+        return root;
+    }
+    let inorder_indx_val_map = {};
+    inorder.forEach((value,indx)=>{
+        inorder_indx_val_map[value] = indx;
+    });
+    return arrToTree(0, inorder.length-1); 
+};
+console.log(buildTree([3,9,20,15,7], [9,3,15,20,7]));
