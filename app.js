@@ -1,29 +1,47 @@
-// Definition for a Node.
- function Node(val, neighbors) {
-     this.val = val === undefined ? 0 : val;
-     this.neighbors = neighbors === undefined ? [] : neighbors;
- };
- var cloneGraph = function(node, kv = {}) {
-    if(node){
-        let cpNode = new Node(node.val);
-        kv[cpNode.val] = cpNode;
-        cpNode.neighbors = node.neighbors.map(n=> {
-            if(kv[n.val])
-                return kv[n.val] 
-            else
-                return cloneGraph(n, kv)
+//'U':Unvisited,'V':Visited,'C':Completed i.e. All adjacent nodes are visited.
+function Node(val){
+    this.val = val;
+    this.adjacentNodes = [];
+    this.status = 'U';
+}
+let numCourses = 20;
+let prerequisites = [[0,10],[3,18],[5,5],[6,11],[11,14],[13,1],[15,1],[17,4]];
+
+let graph = {};//It's basically Key value
+let canFinishFlag;
+var canFinish = function(numCourses, prerequisites) {
+    canFinishFlag = true;
+    graph = {};
+    if(prerequisites.length){
+        createGraph(prerequisites)
+        let startNode = graph[Object.keys(graph)[0]];
+        Object.entries(graph).forEach(data=>{
+            detectCycle(data[1]);
         });
-        return cpNode;
-    }else
-        return null;    
+    }    
+    return canFinishFlag;
 };
- let node1,node2,node3,node4;
- node1 = new Node(1);
- node2 = new Node(2);
- node3 = new Node(3);
- node4 = new Node(4);
- node1.neighbors = [node2, node4]
- node2.neighbors = [node1, node3]
- node3.neighbors = [node4, node2]
- node4.neighbors = [node1, node3]
-console.log(cloneGraph(node1));
+//if there is any cycle in the graph, then we can not finish the courses. 
+let detectCycle = (node) =>{
+    if(node.status === 'U'){
+        node.status = 'V';
+        node.adjacentNodes.forEach(n =>{
+            detectCycle(n);
+        });
+    }else if(node.status === 'V'){
+        canFinishFlag = false;
+        return;
+    }else if(node.status === 'C') return;
+    node.status = 'C';
+}
+//Create graph out of prerequisites. We will get directed graph
+let createGraph = (prerequisites, index) =>{
+    prerequisites.forEach(edge=>{
+        [end, start] = edge;
+        if(!graph[start])
+            graph[start] = new Node(start);
+        if(!graph[end])
+            graph[end] = new Node(end);
+        graph[start].adjacentNodes.push(graph[end]);
+    });
+}
