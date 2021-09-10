@@ -1,47 +1,38 @@
-//'U':Unvisited,'V':Visited,'C':Completed i.e. All adjacent nodes are visited.
-function Node(val){
-    this.val = val;
-    this.adjacentNodes = [];
-    this.status = 'U';
-}
-let numCourses = 20;
-let prerequisites = [[0,10],[3,18],[5,5],[6,11],[11,14],[13,1],[15,1],[17,4]];
+//[-10,9,20,null,null,15,7];
+//[2,-1]
+//[9,6,-3,null,null,-6,2,null,null,2,null,-6,-6,-6]
+function TreeNode(val, left, right) {
+        this.val = (val===undefined ? 0 : val);
+        this.left = (left===undefined ? null : left);
+        this.right = (right===undefined ? null : right);
+    }
+let node1 = new TreeNode(-10);
+let node2 = new TreeNode(9);
+let node3 = new TreeNode(20);
+let node4 = new TreeNode(15);
+let node5 = new TreeNode(7);
+node1.left = node2;
+node1.right = node3;
+node3.left = node4;
+node3.right = node5;
 
-let graph = {};//It's basically Key value
-let canFinishFlag;
-var canFinish = function(numCourses, prerequisites) {
-    canFinishFlag = true;
-    graph = {};
-    if(prerequisites.length){
-        createGraph(prerequisites)
-        let startNode = graph[Object.keys(graph)[0]];
-        Object.entries(graph).forEach(data=>{
-            detectCycle(data[1]);
-        });
-    }    
-    return canFinishFlag;
+let maxSum;
+var maxPathSum = function(root) {
+    maxSum = 0;
+    if(root.val!==null && root.val!==undefined)
+        calcMaxPathSum(root);
+    return maxSum;
 };
-//if there is any cycle in the graph, then we can not finish the courses. 
-let detectCycle = (node) =>{
-    if(node.status === 'U'){
-        node.status = 'V';
-        node.adjacentNodes.forEach(n =>{
-            detectCycle(n);
-        });
-    }else if(node.status === 'V'){
-        canFinishFlag = false;
-        return;
-    }else if(node.status === 'C') return;
-    node.status = 'C';
+
+let calcMaxPathSum = (root) =>{
+    let left,right;
+    left = root.left ? calcMaxPathSum(root.left) : 0;
+    right = root.right ? calcMaxPathSum(root.right) : 0;
+    
+    if(!maxSum)
+        maxSum = root.val;
+    else
+        maxSum = Math.max(maxSum, root.val, root.val + left, root.val + right, root.val + left + right);
+    return root.val + Math.max(left, right, 0);
 }
-//Create graph out of prerequisites. We will get directed graph
-let createGraph = (prerequisites, index) =>{
-    prerequisites.forEach(edge=>{
-        [end, start] = edge;
-        if(!graph[start])
-            graph[start] = new Node(start);
-        if(!graph[end])
-            graph[end] = new Node(end);
-        graph[start].adjacentNodes.push(graph[end]);
-    });
-}
+console.log(maxPathSum(node1))
