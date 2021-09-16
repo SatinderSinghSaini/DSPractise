@@ -37,15 +37,13 @@ WordDictionary.prototype.search = function(word){
         }
         return currentNode.isEndOfWord;
     }
-    return dfs(0,root);
-    
+    return currentNode.isEndOfWord;
 };
-WordDictionary.prototype.addWord = function(word){
+let insert = (word) =>{
     let level;
     let currentNode = root;
     for(level =0;level < word.length; level++){
         let index = word[level].charCodeAt(0) - 'a'.charCodeAt(0);
-
         if(!currentNode.children[index])
             currentNode.children[index] = new TrieNode();            
         currentNode = currentNode.children[index];
