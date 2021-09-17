@@ -1,63 +1,44 @@
-/**
- * Initialize your data structure here.
- */
 
+function TreeNode(val, left, right) {
+    this.val = (val===undefined ? 0 : val)
+    this.left = (left===undefined ? null : left)
+    this.right = (right===undefined ? null : right)
+ }
+ let node1 = new TreeNode(3);
+ let node2 = new TreeNode(4);
+ let node3 = new TreeNode(5);
+ let node4 = new TreeNode(1);
+ let node5 = new TreeNode(2);
 
-/** 
- * @param {string} word
- * @return {void}
- */
+ let node11 = new TreeNode(4);
+ let node12 = new TreeNode(1);
+ let node13 = new TreeNode(2);
 
-//let ALPHABET_SIZE = 26;
+ node1.left = node2;
+ node1.right = node3;
+ node2.left = node4;
+ node2.right = node5;
+ let root = node1;
 
-let root;
+ node11.left = node12;
+ node11.right = node13;
+ let subroot = node11;
 
-var TrieNode = function(){
-    this.children = [];
-    this.isEndOfWord = false;
+let isIdentical = function(root, subroot){
+    if(root === null && subroot === null) return true;
+
+    if(root === null || subroot === null) return false;
+    if((root.val === subroot.val))
+        return isIdentical(root.left, subroot.left) && isIdentical(root.right, subroot.right);
+    return false;
 }
-var WordDictionary = function(){
-        root = new TrieNode();
+
+
+let isSubtree = function(root, subroot){
+    if(subroot === null) return true;
+    if(root === null) return false;
+    if(isIdentical(root, subroot)) return true;
+
+    return (isSubtree(root.left,subroot) || isSubtree(root.right, subroot));
 }
-
-WordDictionary.prototype.search = function(word){
-    function dfs(level, currentNode){
-        for(let i=level; i<word.length; i++){
-            let index = word[i].charCodeAt(0) - 'a'.charCodeAt(0);
-            if(word[i] === '.') {
-                for(let j=0;j<currentNode.children.length;j++){
-                    if(currentNode.children[j] && dfs(i+1, currentNode.children[j])) return true;                
-                }
-                return false;
-            }
-            else{
-                if(!currentNode.children[index]) return false;
-                currentNode = currentNode.children[index];
-            }            
-        }
-        return currentNode.isEndOfWord;
-    }
-    return currentNode.isEndOfWord;
-};
-let insert = (word) =>{
-    let level;
-    let currentNode = root;
-    for(level =0;level < word.length; level++){
-        let index = word[level].charCodeAt(0) - 'a'.charCodeAt(0);
-        if(!currentNode.children[index])
-            currentNode.children[index] = new TrieNode();            
-        currentNode = currentNode.children[index];
-    }
-    currentNode.isEndOfWord = true;
-};
-
-
- let trie = new WordDictionary();
- let keys = ["at", "and", "an", "add"];
-for (i = 0; i < keys.length ; i++)
-    trie.addWord(keys[i]);
-
-console.log(root);
-console.log(trie.search('a'));
-console.log(trie.search('.at'));
-console.log(trie.search('bi'));
+console.log(isSubtree(root,subroot));
