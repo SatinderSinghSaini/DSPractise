@@ -4,41 +4,38 @@ function TreeNode(val, left, right) {
     this.left = (left===undefined ? null : left)
     this.right = (right===undefined ? null : right)
  }
- let node1 = new TreeNode(3);
- let node2 = new TreeNode(4);
- let node3 = new TreeNode(5);
- let node4 = new TreeNode(1);
- let node5 = new TreeNode(2);
+ let node1 = new TreeNode(1);
+ let node2 = new TreeNode(2);
+ let node3 = new TreeNode(3);
+ let node4 = new TreeNode(4);
+ let node5 = new TreeNode(5);
 
- let node11 = new TreeNode(4);
- let node12 = new TreeNode(1);
- let node13 = new TreeNode(2);
+ let node6 = new TreeNode(6);
 
- node1.left = node2;
- node1.right = node3;
- node2.left = node4;
- node2.right = node5;
- let root = node1;
+ node5.left = node3;
+ node5.right = node6;
+ node3.left = node2;
+ node3.right = node4;
+ node2.left = node1;
+ let root = node5;
+ var kthSmallest = function(root, k) {
+    let inOrderArr = [];
+    return inOrderTraversal(root , inOrderArr, k);
+};
 
- node11.left = node12;
- node11.right = node13;
- let subroot = node11;
+var inOrderTraversal = function(root, inOrderArr, k) {
+    
+    if(root){
+        let left = inOrderTraversal(root.left, inOrderArr,k);
+        if(left !== null) return left;
 
-let isIdentical = function(root, subroot){
-    if(root === null && subroot === null) return true;
+        inOrderArr.push(root.val);
+        if(inOrderArr.length === k) return inOrderArr[k-1];
 
-    if(root === null || subroot === null) return false;
-    if((root.val === subroot.val))
-        return isIdentical(root.left, subroot.left) && isIdentical(root.right, subroot.right);
-    return false;
+        let right = inOrderTraversal(root.right, inOrderArr, k);
+        if(right !== null) return right;     
+    }
+    return null;
 }
 
-
-let isSubtree = function(root, subroot){
-    if(subroot === null) return true;
-    if(root === null) return false;
-    if(isIdentical(root, subroot)) return true;
-
-    return (isSubtree(root.left,subroot) || isSubtree(root.right, subroot));
-}
-console.log(isSubtree(root,subroot));
+console.log(kthSmallest(root, 2));
