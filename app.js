@@ -18,24 +18,14 @@ function TreeNode(val, left, right) {
  node3.right = node4;
  node2.left = node1;
  let root = node5;
- var kthSmallest = function(root, k) {
-    let inOrderArr = [];
-    return inOrderTraversal(root , inOrderArr, k);
+ 
+ var lowestCommonAncestor = function(root, p, q) {
+   if(p.val <root.val && q.val < root.val){
+    return lowestCommonAncestor(root.left, p, q);
+   } else if(p.val > root.val && q.val > root.val){
+    return lowestCommonAncestor(root.right, p, q);
+   }
+   return root;
 };
 
-var inOrderTraversal = function(root, inOrderArr, k) {
-    
-    if(root){
-        let left = inOrderTraversal(root.left, inOrderArr,k);
-        if(left !== null) return left;
-
-        inOrderArr.push(root.val);
-        if(inOrderArr.length === k) return inOrderArr[k-1];
-
-        let right = inOrderTraversal(root.right, inOrderArr, k);
-        if(right !== null) return right;     
-    }
-    return null;
-}
-
-console.log(kthSmallest(root, 2));
+console.log(lowestCommonAncestor(root, node2, node6));
